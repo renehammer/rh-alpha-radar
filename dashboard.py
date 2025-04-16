@@ -42,3 +42,21 @@ for symbol in stocks:
 signal_df = pd.DataFrame(signal_data, columns=["Ticker", "Kurs", "Momentum-Score"])
 signal_df = signal_df.sort_values(by="Momentum-Score", ascending=False)
 st.dataframe(signal_df)
+
+# Testnachricht über Telegram senden
+import requests
+
+BOT_TOKEN = "8126985237:AAGKurwSf_zv263XY2FmYladow6cH05o1e8"
+CHAT_ID = 7428599123  # deine persönliche ID
+
+def send_telegram_message(text):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"}
+    response = requests.post(url, data=data)
+    return response.json()
+
+# Einmalige Testnachricht (z. B. nach Button-Klick)
+if st.button("📩 Testnachricht senden"):
+    result = send_telegram_message("✅ <b>RH AlphaRadar</b> ist jetzt live!\\n\\nAb sofort erhältst du deine Handelssignale direkt per Telegram.")
+    st.success("Nachricht gesendet!" if result["ok"] else "Fehler beim Senden.")
+
