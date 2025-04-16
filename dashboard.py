@@ -1,6 +1,14 @@
 
 # RH AlphaRadar – KI-gestütztes Signal-Dashboard
 import streamlit as st
+from PIL import Image
+
+logo = Image.open("logo_rh_alpharadar.png")
+st.set_page_config(page_title="RH AlphaRadar", layout="wide", page_icon=logo)
+
+# Optional: Logo oben anzeigen
+st.image(logo, width=100)
+
 import pandas as pd
 import yfinance as yf
 import datetime as dt
