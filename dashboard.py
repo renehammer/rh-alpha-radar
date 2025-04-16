@@ -10,7 +10,6 @@ import requests
 
 st.set_page_config(page_title="RH AlphaRadar – Signalübersicht", page_icon="favicon.png", layout="wide")
 
-# Logo einbinden
 logo_path = "logo_rh_alpharadar.png"
 if os.path.exists(logo_path):
     st.image(logo_path, width=120)
@@ -39,7 +38,7 @@ def load_data(symbol):
     df["Momentum"] = df["Adj Close"] / df["Adj Close"].rolling(window=14).mean()
     return df
 
-# Daten je Watchlist vorbereiten
+# Ø Momentum je Watchlist
 all_scores = {}
 for name, symbols in watchlists.items():
     scores = []
@@ -49,10 +48,8 @@ for name, symbols in watchlists.items():
             score = round((df["Momentum"].iloc[-1] - 1) * 100, 2)
             scores.append(score)
     if scores:
-        avg_score = round(sum(scores) / len(scores), 2)
-        all_scores[name] = avg_score
+        all_scores[name] = round(sum(scores) / len(scores), 2)
 
-# Ø Momentum-Score je Watchlist – Balkendiagramm
 st.subheader("📊 Vergleich: Ø Momentum-Score je Watchlist")
 score_df = pd.DataFrame(list(all_scores.items()), columns=["Watchlist", "Ø Momentum-Score"])
 fig2, ax2 = plt.subplots()
@@ -61,7 +58,7 @@ ax2.set_ylabel("Ø Momentum-Score")
 ax2.set_title("Momentum-Vergleich der Watchlists")
 st.pyplot(fig2)
 
-# 📈 Score-Trend über mehrere Wochen – fiktiv für Demo
+# Demo-Score-Trend
 st.subheader("📈 Score-Trend (Demo)")
 trend_data = {
     "Tech/US": [1.5, 2.0, 2.8, 2.4, 2.1],
@@ -96,7 +93,7 @@ signal_df = pd.DataFrame(signal_data, columns=["Ticker", "Kurs", "Momentum-Score
 signal_df = signal_df.sort_values(by="Momentum-Score", ascending=False)
 st.dataframe(signal_df)
 
-# Kursentwicklung
+# Chart
 st.subheader("📉 Kursentwicklung & Momentum")
 df = load_data(selected_stock)
 if df is not None:
@@ -109,7 +106,7 @@ if df is not None:
     plt.title(f"{selected_stock} – Kurs & Momentum")
     st.pyplot(fig)
 
-# Telegram-Integration
+# Telegram
 BOT_TOKEN = "8126985237:AAGKurwSf_zv263XY2FmYladow6cH05o1e8"
 CHAT_ID = 7428599123
 
@@ -125,18 +122,8 @@ def send_telegram_chart(image_path):
         files = {"photo": image_file}
         return requests.post(url, data=data, files=files)
 
-
 if st.button("📩 Telegram-Testnachricht senden"):
     msg = "✅ RH AlphaRadar: Neue Score-Daten verfügbar.\nWoche: KW14"
-    r1 = send_telegram_message(msg)
-    r2 = send_telegram_chart("watchlist_scores_chart.png")
-    if r1.status_code == 200 and r2.status_code == 200:
-        st.success("Telegram-Text + Chart erfolgreich gesendet.")
-    else:
-        st.error("Fehler beim Senden über Telegram.")
-
-    msg = "✅ RH AlphaRadar: Neue Score-Daten verfügbar.\nWoche: KW14"
-Woche: KW14"
     r1 = send_telegram_message(msg)
     r2 = send_telegram_chart("watchlist_scores_chart.png")
     if r1.status_code == 200 and r2.status_code == 200:
