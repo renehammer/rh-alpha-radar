@@ -125,8 +125,17 @@ def send_telegram_chart(image_path):
         files = {"photo": image_file}
         return requests.post(url, data=data, files=files)
 
+
 if st.button("📩 Telegram-Testnachricht senden"):
-msg = "✅ RH AlphaRadar: Neue Score-Daten verfügbar.\nWoche: KW14"
+    msg = "✅ RH AlphaRadar: Neue Score-Daten verfügbar.\nWoche: KW14"
+    r1 = send_telegram_message(msg)
+    r2 = send_telegram_chart("watchlist_scores_chart.png")
+    if r1.status_code == 200 and r2.status_code == 200:
+        st.success("Telegram-Text + Chart erfolgreich gesendet.")
+    else:
+        st.error("Fehler beim Senden über Telegram.")
+
+    msg = "✅ RH AlphaRadar: Neue Score-Daten verfügbar.\nWoche: KW14"
 Woche: KW14"
     r1 = send_telegram_message(msg)
     r2 = send_telegram_chart("watchlist_scores_chart.png")
