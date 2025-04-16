@@ -58,3 +58,26 @@ if df is not None:
     ax2.set_ylabel("Momentum")
     plt.title(f"{selected_stock} – Kurs & Momentum")
     st.pyplot(fig)
+
+
+
+# Telegram-Funktion einbinden
+import requests
+
+BOT_TOKEN = "8126985237:AAGKurwSf_zv263XY2FmYladow6cH05o1e8"
+CHAT_ID = 7428599123
+
+def send_telegram_message(text):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"}
+    return requests.post(url, data=data)
+
+# Button zur Testnachricht im Streamlit-Dashboard
+if st.button("📩 Telegram-Testnachricht senden"):
+    message = "✅ RH AlphaRadar: Dein Signal-Dashboard ist aktiv.
+Neue Momentum-Signale verfügbar."
+    response = send_telegram_message(message)
+    if response.status_code == 200:
+        st.success("Testnachricht erfolgreich gesendet.")
+    else:
+        st.error("Fehler beim Senden der Nachricht.")
