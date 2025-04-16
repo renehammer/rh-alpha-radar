@@ -74,8 +74,9 @@ def send_telegram_message(text):
 
 # Button zur Testnachricht im Streamlit-Dashboard
 if st.button("📩 Telegram-Testnachricht senden"):
-    message = "✅ RH AlphaRadar: Dein Signal-Dashboard ist aktiv.
-Neue Momentum-Signale verfügbar."
+    message = """✅ RH AlphaRadar: Dein Signal-Dashboard ist aktiv.
+Neue Momentum-Signale verfügbar."""
+
     response = send_telegram_message(message)
     if response.status_code == 200:
         st.success("Testnachricht erfolgreich gesendet.")
