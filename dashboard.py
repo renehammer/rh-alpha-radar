@@ -17,6 +17,7 @@ if os.path.exists(logo_path):
 
 st.title("📈 RH AlphaRadar – KI-Trading-Dashboard")
 
+# Watchlists
 watchlists = {
     "Tech/US": ["NVDA", "TSLA", "AMZN", "MSFT", "ASML", "META"],
     "DAX": ["SAP.DE", "AIR.DE", "SIE.DE", "DAI.DE", "ALV.DE", "BMW.DE", "BAS.DE", "BAYN.DE", "LIN.DE"],
@@ -26,7 +27,7 @@ watchlists = {
 selected_watchlist = st.selectbox("📂 Watchlist auswählen", list(watchlists.keys()))
 stocks = watchlists[selected_watchlist]
 
-selected_stock = st.selectbox("📊 Einzelaktien-Analyse", stocks)
+selected_stock = st.selectbox("📊 Einzelaktien-Analyse", options=stocks)
 
 end = dt.date.today()
 start = end - dt.timedelta(days=90)
