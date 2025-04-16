@@ -6,18 +6,22 @@ import pandas as pd
 import yfinance as yf
 import datetime as dt
 
-# Seitenkonfiguration
-st.set_page_config(page_title="RH AlphaRadar", layout="wide")
+# Seitenkonfiguration mit Favicon und Titel
+st.set_page_config(
+    page_title="RH AlphaRadar – Signalübersicht",
+    page_icon="favicon.png",
+    layout="wide"
+)
 
-# Logo laden und anzeigen
+# Optional: RH AlphaRadar Logo im Header
 logo_path = "logo_rh_alpharadar.png"
 if os.path.exists(logo_path):
     st.image(logo_path, width=120)
-else:
-    st.warning("Logo konnte nicht geladen werden – Datei fehlt.")
 
+# Titel
 st.title("📈 RH AlphaRadar – KI-Trading-Dashboard")
 
+# Watchlist: ETFs und Aktien
 assets = {
     "ETFs": ["IQQW.DE", "EQQQ.DE", "2B76.DE", "AIAI.DE", "ESPO.DE"],
     "Aktien": ["NVDA", "TSLA", "AMZN", "MSFT", "SAP.DE", "AIR.DE"]
@@ -26,6 +30,7 @@ assets = {
 selected_group = st.selectbox("Asset-Gruppe", list(assets.keys()))
 stocks = assets[selected_group]
 
+# Zeitraum: Letzte 90 Tage
 end = dt.date.today()
 start = end - dt.timedelta(days=90)
 
@@ -38,6 +43,7 @@ def load_data(symbol):
     df["Momentum"] = df["Adj Close"] / df["Adj Close"].rolling(window=14).mean()
     return df
 
+# Signalberechnung
 st.subheader("📊 Signalübersicht")
 signal_data = []
 for symbol in stocks:
@@ -49,6 +55,7 @@ for symbol in stocks:
     score = round((momentum - 1) * 100, 2)
     signal_data.append((symbol, last_price, score))
 
+# Ausgabe als Tabelle
 signal_df = pd.DataFrame(signal_data, columns=["Ticker", "Kurs", "Momentum-Score"])
 signal_df = signal_df.sort_values(by="Momentum-Score", ascending=False)
 st.dataframe(signal_df)
