@@ -21,7 +21,9 @@ start = end - dt.timedelta(days=90)
 
 @st.cache_data
 def load_data(symbol):
-    df = yf.download(symbol, start=start, end=end)
+    df = yf.download(symbol, start=start, end=end, progress=False)
+    if df.empty or "Adj Close" not in df.columns:
+        return None
     df["Return"] = df["Adj Close"].pct_change().fillna(0)
     df["Momentum"] = df["Adj Close"] / df["Adj Close"].rolling(window=14).mean()
     return df
@@ -30,6 +32,8 @@ st.subheader("📊 Signalübersicht")
 signal_data = []
 for symbol in stocks:
     df = load_data(symbol)
+    if df is None:
+        continue
     last_price = df["Adj Close"].iloc[-1]
     momentum = df["Momentum"].iloc[-1]
     score = round((momentum - 1) * 100, 2)
